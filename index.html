@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>Rich Presence</title>
+		<link rel="icon" type="image/png" href="./public/favicons/dark-fav.png" />
+		<style>
+			:root {
+				color-scheme: dark;
+				--bg: #050505;
+				--panel: #101010;
+				--accent: #ffffff;
+				--accent-soft: rgba(255, 255, 255, 0.04);
+				--text: #f5f5f5;
+				--muted: #9b9b9b;
+				--danger: #ff4b4b;
+				--border: rgba(255, 255, 255, 0.12);
+			}
+			* {
+				box-sizing: border-box;
+				margin: 0;
+				padding: 0;
+			}
+			body {
+				font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+					sans-serif;
+				background: radial-gradient(circle at top, #151515 0, #000000 55%);
+				color: var(--text);
+				width: 100%;
+				height: 100%;
+				margin: 0;
+				padding: 0;
+				overflow: hidden;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+			.app {
+				width: 460px;
+				padding: 18px 20px 16px;
+				border-radius: 18px;
+				background: #050505;
+				box-shadow: 0 30px 80px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(0, 0, 0, 1);
+			}
+			.top-bar {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				margin-bottom: 14px;
+			}
+			.top-left {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+			}
+			.logo-circle {
+				width: 30px;
+				height: 30px;
+				border-radius: 999px;
+				border: 1px solid var(--border);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 14px;
+				font-weight: 600;
+				letter-spacing: 0.08em;
+			}
+			.brand-block {
+				display: flex;
+				flex-direction: column;
+				gap: 2px;
+			}
+			.brand-name {
+				font-size: 14px;
+				font-weight: 600;
+				letter-spacing: 0.12em;
+				text-transform: uppercase;
+			}
+			.brand-sub {
+				font-size: 11px;
+				text-transform: uppercase;
+				letter-spacing: 0.14em;
+				color: var(--muted);
+			}
+			.status-chip {
+				padding: 4px 10px 3px;
+				border-radius: 999px;
+				border: 1px solid var(--border);
+				font-size: 11px;
+				letter-spacing: 0.12em;
+				text-transform: uppercase;
+				color: var(--text);
+				display: flex;
+				align-items: center;
+				gap: 8px;
+			}
+			.status-dot {
+				width: 8px;
+				height: 8px;
+				border-radius: 999px;
+				border: 1px solid rgba(255, 255, 255, 0.6);
+				background: radial-gradient(
+					circle,
+					#ffffff 0,
+					#ffffff 50%,
+					#000000 100%
+				);
+			}
+			.card {
+				border-radius: 14px;
+				border: 1px solid var(--border);
+				background: linear-gradient(
+					145deg,
+					#060606 0%,
+					#050505 65%,
+					#000000 100%
+				);
+				padding: 12px 14px 10px;
+			}
+			.card-header {
+				display: flex;
+				align-items: center;
+				margin-bottom: 10px;
+			}
+			.card-title-block {
+				margin-left: 20px;
+				display: flex;
+				flex-direction: column;
+				gap: 2px;
+			}
+			.card-label {
+				font-size: 10px;
+				letter-spacing: 0.16em;
+				text-transform: uppercase;
+				color: var(--muted);
+				white-space: nowrap;
+			}
+			.card-title {
+				white-space: nowrap;
+				font-size: 13px;
+				font-weight: 500;
+				letter-spacing: 0.04em;
+			}
+			.card-title-block .card-title,
+			.card-title-block .card-label {
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				max-width: 230px;
+			}
+			.divider {
+				margin: 10px 0 8px;
+				border-top: 1px dashed rgba(255, 255, 255, 0.16);
+			}
+			.button-row {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				margin-bottom: 8px;
+			}
+			.rpc-button {
+				flex: 1;
+				padding: 8px 10px;
+				border-radius: 999px;
+				border: 1px solid var(--border);
+				background: #050505;
+				color: var(--text);
+				font-size: 11px;
+				letter-spacing: 0.16em;
+				text-transform: uppercase;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 6px;
+				cursor: pointer;
+				transition: background 0.09s ease-out, color 0.09s ease-out,
+					transform 0.08s ease-out, box-shadow 0.08s ease-out;
+			}
+			.rpc-button:hover {
+				background: #ffffff;
+				color: #000000;
+				transform: translateY(-1px);
+				box-shadow: 0 14px 30px rgba(0, 0, 0, 0.85);
+			}
+			.rpc-button:active {
+				transform: translateY(0);
+				box-shadow: 0 6px 18px rgba(0, 0, 0, 0.9);
+			}
+			.rpc-button-icon {
+				width: 16px;
+				height: 16px;
+				border-radius: 999px;
+				border: 1px solid var(--border);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 11px;
+			}
+			.client-row {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				margin-bottom: 8px;
+				font-size: 10px;
+				letter-spacing: 0.12em;
+				text-transform: uppercase;
+				color: var(--muted);
+			}
+			.client-row input {
+				flex: 1;
+				background: #050505;
+				color: var(--text);
+				border-radius: 999px;
+				border: 1px solid var(--border);
+				padding: 4px 8px;
+				font-size: 11px;
+				letter-spacing: 0.08em;
+				outline: none;
+			}
+			.client-row button {
+				padding: 5px 10px;
+				border-radius: 999px;
+				border: 1px solid var(--border);
+				background: #050505;
+				color: var(--text);
+				font-size: 10px;
+				letter-spacing: 0.12em;
+				text-transform: uppercase;
+				cursor: pointer;
+			}
+			.auto-row {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				margin-bottom: 8px;
+				font-size: 10px;
+				letter-spacing: 0.12em;
+				text-transform: uppercase;
+				color: var(--muted);
+			}
+			.auto-label {
+				display: flex;
+				align-items: center;
+				gap: 6px;
+			}
+			.auto-toggle {
+				position: relative;
+				width: 40px;
+				height: 20px;
+				border-radius: 999px;
+				border: 1px solid var(--border);
+				background: #050505;
+				cursor: pointer;
+				transition: background 0.15s ease-out, border-color 0.15s ease-out;
+			}
+			.auto-toggle-knob {
+				position: absolute;
+				top: 1px;
+				left: 1px;
+				width: 16px;
+				height: 16px;
+				border-radius: 999px;
+				background: #ffffff;
+				transition: transform 0.15s ease-out;
+			}
+			.auto-toggle[data-on='true'] {
+				background: #22c55e;
+				border-color: rgba(34, 197, 94, 0.9);
+			}
+			.auto-toggle[data-on='true'] .auto-toggle-knob {
+				transform: translateX(18px);
+			}
+			.meta-row {
+				display: flex;
+				gap: 10px;
+				font-size: 10px;
+				text-transform: uppercase;
+				letter-spacing: 0.16em;
+				color: var(--muted);
+			}
+			.payload {
+				margin-top: 10px;
+				padding: 8px 10px 7px;
+				border-radius: 12px;
+				background: #050505;
+				border: 1px solid var(--border);
+			}
+			.payload-title {
+				font-size: 10px;
+				text-transform: uppercase;
+				letter-spacing: 0.16em;
+				color: var(--muted);
+				margin-bottom: 5px;
+			}
+			.payload-grid {
+				display: grid;
+				grid-template-columns: 70px 1fr;
+				row-gap: 3px;
+				column-gap: 8px;
+				font-size: 11px;
+			}
+			.payload-label {
+				color: var(--muted);
+			}
+			.payload-value {
+				color: var(--text);
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+			}
+			.payload-status {
+				margin-top: 5px;
+				font-size: 11px;
+				letter-spacing: 0.08em;
+				text-transform: uppercase;
+				color: var(--danger);
+			}
+		</style>
+	</head>
+	<body>
+		<div class="app">
+			<div class="top-bar">
+				<div class="top-left">
+					<div class="logo-circle">RP</div>
+					<div class="brand-block">
+						<div class="brand-name">RICH PRESENCE</div>
+						<div class="brand-sub">DISCORD STATUS</div>
+					</div>
+				</div>
+				<div class="status-chip">
+					<div class="status-dot"></div>
+					<span>ACTIVE SESSION</span>
+				</div>
+			</div>
+
+			<div class="card">
+				<div class="card-header">
+					<div class="card-label">activity</div>
+					<div class="card-title-block">
+						<div class="card-title" id="activity-title">Idle</div>
+						<div class="card-label" id="activity-sub">Waiting for Discord</div>
+					</div>
+				</div>
+
+				<div class="divider"></div>
+
+				<div class="client-row">
+					<span>client id</span>
+					<input id="client-id-input" placeholder="clientId" />
+					<button id="client-id-save">save</button>
+				</div>
+
+				<div class="client-row">
+					<span>Button</span>
+					<input id="steam-label-input" placeholder="Steam label" />
+					<input id="steam-url-input" placeholder="Steam URL" />
+				</div>
+
+				<div class="client-row">
+					<span>Button</span>
+					<input id="site-label-input" placeholder="Website label" />
+					<input id="site-url-input" placeholder="Website URL" />
+				</div>
+
+				<div class="auto-row">
+					<div class="auto-label">
+						<span>AUTO START</span>
+					</div>
+					<div id="auto-launch-toggle" class="auto-toggle" data-on="false">
+						<div class="auto-toggle-knob"></div>
+					</div>
+				</div>
+
+				<div class="button-row">
+					<button id="restart-discord" class="rpc-button">
+						<div class="rpc-button-icon">↻</div>
+						<span>RESTART PRESENCE</span>
+					</button>
+				</div>
+
+				<div class="meta-row">
+					<span id="meta-object">OBJECT: —</span>
+					<span id="meta-buttons">BUTTONS: —</span>
+				</div>
+			</div>
+
+			<div class="payload">
+				<div class="payload-title">current payload</div>
+				<div class="payload-grid">
+					<div class="payload-label">Buttons</div>
+					<div class="payload-value" id="info-buttons">–</div>
+					<div class="payload-label">Object</div>
+					<div class="payload-value" id="info-object">–</div>
+					<div class="payload-label">State</div>
+					<div class="payload-value" id="info-details">–</div>
+				</div>
+				<div class="payload-status" id="info-status">
+					Waiting for first update…
+				</div>
+			</div>
+		</div>
+
+		<script type="module" src="./src/renderer.js"></script>
+	</body>
+</html>
