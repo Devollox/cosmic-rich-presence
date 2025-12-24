@@ -315,10 +315,51 @@
 				text-transform: uppercase;
 				color: var(--danger);
 			}
+
+			.titlebar {
+				height: 28px;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				-webkit-app-region: drag;
+				margin: -8px -10px 6px;
+				padding: 4px 8px 0;
+			}
+
+			.titlebar-buttons {
+				display: flex;
+				gap: 6px;
+				-webkit-app-region: no-drag;
+			}
+
+			.titlebar-btn {
+				width: 18px;
+				height: 18px;
+				border-radius: 999px;
+				border: 1px solid var(--border);
+				background: #050505;
+				color: var(--text);
+				font-size: 11px;
+				line-height: 1;
+				padding: 0;
+				cursor: pointer;
+			}
+			.titlebar-btn:hover {
+				background: #ffffff;
+				color: #000000;
+			}
 		</style>
 	</head>
 	<body>
 		<div class="app">
+			<div class="titlebar">
+				<div class="titlebar-drag-region"></div>
+				<div class="titlebar-buttons">
+					<button id="window-minimize" class="titlebar-btn">–</button>
+					<button id="window-close" class="titlebar-btn">×</button>
+				</div>
+			</div>
+
 			<div class="top-bar">
 				<div class="top-left">
 					<div class="logo-circle">RP</div>
