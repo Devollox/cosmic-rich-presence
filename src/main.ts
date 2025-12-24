@@ -25,8 +25,12 @@ function sendStatus(status: string) {
 function createWindow() {
 	mainWindow = new BrowserWindow({
 		width: 460,
+		height: 500,
 		resizable: false,
 		icon: iconPath,
+		frame: false,
+		titleBarStyle: 'hidden',
+		backgroundColor: '#000000',
 		webPreferences: {
 			preload: path.join(__dirname, 'preload.js'),
 			nodeIntegration: false,
@@ -50,15 +54,51 @@ function createWindow() {
 	)
 
 	mainWindow.on('close', ev => {
-		if (mainWindow && mainWindow.isVisible()) {
-			ev.preventDefault()
-			mainWindow.hide()
-		}
+		ev.preventDefault()
+		BrowserWindow.getAllWindows().forEach(w => {
+			if (!w.isMinimized()) {
+				w.hide()
+			}
+		})
 	})
 }
 
 function createTray() {
 	const contextMenu = Menu.buildFromTemplate([
+		{ label: 'Cosmic Rich Presence', enabled: false },
+		{ type: 'separator' },
+		{
+			label: 'Show Window',
+			accelerator: 'CmdOrCtrl+,',
+			click: () => {
+				const win = BrowserWindow.getAllWindows()[0]
+				if (win) {
+					if (win.isMinimized()) win.restore()
+					win.show()
+					win.focus()
+				}
+			},
+		},
+		{
+			label: 'Restart Presence',
+			accelerator: 'CmdOrCtrl+R',
+			click: () => {
+				const win = BrowserWindow.getAllWindows()[0]
+				if (win && !win.isDestroyed()) {
+					sendStatus('RESTARTING')
+					stopDiscordRich()
+					startDiscordRich(
+						payload => {
+							if (win.isDestroyed()) return
+							win.webContents.send('rpc-update', payload)
+						},
+						status => {
+							sendStatus(status)
+						}
+					)
+				}
+			},
+		},
 		{ type: 'separator' },
 		{
 			label: 'Quit',
@@ -72,11 +112,23 @@ function createTray() {
 	])
 
 	tray = new Tray(iconPath)
-	tray.setToolTip('Rich Presence')
+	tray.setToolTip('Cosmic Rich Presence')
 	tray.setContextMenu(contextMenu)
 	tray.on('click', () => {
 		const win = BrowserWindow.getAllWindows()[0]
-		if (win) win.show()
+		if (win) {
+			if (win.isMinimized()) win.restore()
+			win.show()
+			win.focus()
+		}
+	})
+	tray.on('double-click', () => {
+		const win = BrowserWindow.getAllWindows()[0]
+		if (win) {
+			if (win.isMinimized()) win.restore()
+			win.show()
+			win.focus()
+		}
 	})
 }
 
@@ -147,4 +199,18 @@ function setAutoLaunch(enabled: boolean) {
 ipcMain.handle('set-auto-launch', async (_event, enabled: boolean) => {
 	setAutoLaunch(enabled)
 	return true
+})
+
+ipcMain.handle('window-close', () => {
+	const win = BrowserWindow.getAllWindows()[0]
+	if (win && !win.isDestroyed()) {
+		win.close()
+	}
+})
+
+ipcMain.handle('window-minimize', () => {
+	const win = BrowserWindow.getAllWindows()[0]
+	if (win && !win.isDestroyed()) {
+		win.minimize()
+	}
 })
