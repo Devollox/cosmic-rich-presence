@@ -24,4 +24,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
 			siteLabel,
 			siteUrl,
 		}),
+	windowClose: () => ipcRenderer.invoke('window-close'),
+	windowMinimize: () => ipcRenderer.invoke('window-minimize'),
 })
