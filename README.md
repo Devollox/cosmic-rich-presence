@@ -30,13 +30,18 @@ Two buttons are always displayed in the Discord activity:
 
 The current signature and link of the second button are set in the application interface and saved in the config, so as not to re-enter them the next time you start. 
 
-## Setting up
+## Installation
 
-1. Create an app in the [Discord Developer Portal](https://discord.com/developers/applications ) and take his **Client ID**.
-2. In the Cosmic Rich Presence window, specify:
-   - `clientId`
-   - label and URL for Steam buttons(example)
-   - label and URL for the Website-buttons(example)
-3. Press **SAVE**, after which Presence will automatically restart.
+**Easy Setup:** Download the ZIP file from GitHub, extract it, run `Rich Presence.exe`, and configure your Discord status in seconds.
+
+### Detailed Steps
+
+1. Click the green `Code` button → `Download ZIP`
+2. Extract the ZIP file to any location
+3. Run `Rich Presence.exe`
+4. Enter your Discord Application ID (get it from [Discord Developer Portal](https://discord.com/developers/applications))
+5. Configure button pairs, status cycles, and images
+6. Click `SAVE` button
+7. Your Discord Rich Presence is now active!
 
 Without the filled in `ClientID` and both sets of values (label + url), the Rich Presence script does not run.
