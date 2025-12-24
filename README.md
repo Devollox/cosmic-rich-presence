@@ -20,18 +20,18 @@ Cosmic Rich Presence is a small Electron application that shows the dynamic stat
 Two buttons are always displayed in the Discord activity:
 
 1. **Space Object (first button)**  
-   Leads to the website [sky-map.org ](https://www.sky-map.org ), opening the page of the current object with the desired image type and zoom level. [web:683]
+   Leads to the website [sky-map.org ](https://www.sky-map.org ), opening the page of the current object with the desired image type and zoom level.
 
 2. **The second button (dynamic)**  
    This button changes its purpose every 30 seconds:
 - Or it shows a link to your Steam profile.  
    - Or it shows a link to your personal website.  
 
-The current signature and link of the second button are set in the application interface and saved in the config, so as not to re-enter them the next time you start. [web:672]
+The current signature and link of the second button are set in the application interface and saved in the config, so as not to re-enter them the next time you start. 
 
 ## Setting up
 
-1. Create an app in the [Discord Developer Portal](https://discord.com/developers/applications ) and take his **Client ID**. [web:676]  
+1. Create an app in the [Discord Developer Portal](https://discord.com/developers/applications ) and take his **Client ID**.
 2. In the Cosmic Rich Presence window, specify:
    - `clientId`
    - label and URL for Steam buttons
