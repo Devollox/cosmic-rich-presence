@@ -44,4 +44,6 @@ The current signature and link of the second button are set in the application i
 6. Click `SAVE` button
 7. Your Discord Rich Presence is now active!
 
+> **⏱️ Initial Delay:** When you first start Rich Presence, there's approximately a 25 second delay before the status appears in Discord. This is normal and only happens on startup. After that, status updates every 30 seconds.
+
 Without the filled in `ClientID` and both sets of values (label + url), the Rich Presence script does not run.
