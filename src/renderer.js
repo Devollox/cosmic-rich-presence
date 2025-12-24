@@ -72,10 +72,10 @@ function updateStatus(status) {
 	const chip = document.querySelector('.status-chip span')
 	const statusDot = document.querySelector('.status-dot')
 	const subLabel = document.getElementById('activity-sub')
-	const { chip: chipText, sub: subText } = mapStatusToText(status)
+	const mapped = mapStatusToText(status)
 
-	if (chip) chip.textContent = chipText
-	if (subLabel) subLabel.textContent = subText
+	if (chip) chip.textContent = mapped.chip
+	if (subLabel) subLabel.textContent = mapped.sub
 
 	if (statusDot) {
 		if (status === 'ACTIVE') {
@@ -101,7 +101,7 @@ function setupRestartButton() {
 	const btn = document.getElementById('restart-discord')
 	if (!btn) return
 	btn.addEventListener('click', () => {
-		if (window.electronAPI?.restartDiscordRich) {
+		if (window.electronAPI && window.electronAPI.restartDiscordRich) {
 			updateStatus('RESTARTING')
 			window.electronAPI.restartDiscordRich()
 		}
@@ -152,10 +152,10 @@ function setupClientIdControls() {
 		localStorage.setItem('siteLabel', siteLabel)
 		localStorage.setItem('siteUrl', siteUrl)
 
-		if (window.electronAPI?.setClientId) {
+		if (window.electronAPI && window.electronAPI.setClientId) {
 			await window.electronAPI.setClientId(clientId)
 		}
-		if (window.electronAPI?.setLinks) {
+		if (window.electronAPI && window.electronAPI.setLinks) {
 			await window.electronAPI.setLinks(
 				steamLabel,
 				steamUrl,
@@ -163,7 +163,7 @@ function setupClientIdControls() {
 				siteUrl
 			)
 		}
-		if (window.electronAPI?.restartDiscordRich) {
+		if (window.electronAPI && window.electronAPI.restartDiscordRich) {
 			await window.electronAPI.restartDiscordRich()
 		}
 	}
@@ -185,25 +185,43 @@ function setupAutoLaunchToggle() {
 		const next = !current
 		toggle.dataset.on = next ? 'true' : 'false'
 		localStorage.setItem('autoLaunch', String(next))
-		if (window.electronAPI?.setAutoLaunch) {
+		if (window.electronAPI && window.electronAPI.setAutoLaunch) {
 			window.electronAPI.setAutoLaunch(next)
 		}
 	})
+}
+
+function setupWindowControls() {
+	const closeBtn = document.getElementById('window-close')
+	const minimizeBtn = document.getElementById('window-minimize')
+
+	if (closeBtn && window.electronAPI && window.electronAPI.windowClose) {
+		closeBtn.addEventListener('click', () => {
+			window.electronAPI.windowClose()
+		})
+	}
+
+	if (minimizeBtn && window.electronAPI && window.electronAPI.windowMinimize) {
+		minimizeBtn.addEventListener('click', () => {
+			window.electronAPI.windowMinimize()
+		})
+	}
 }
 
 window.addEventListener('DOMContentLoaded', () => {
 	setupRestartButton()
 	setupClientIdControls()
 	setupAutoLaunchToggle()
+	setupWindowControls()
 	updateInfo(null)
 	updateStatus('DISABLED')
 
-	if (window.electronAPI?.onRpcUpdate) {
+	if (window.electronAPI && window.electronAPI.onRpcUpdate) {
 		window.electronAPI.onRpcUpdate(payload => {
 			updateInfo(payload)
 		})
 	}
-	if (window.electronAPI?.onRpcStatus) {
+	if (window.electronAPI && window.electronAPI.onRpcStatus) {
 		window.electronAPI.onRpcStatus(status => {
 			updateStatus(status)
 		})
