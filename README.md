@@ -34,8 +34,8 @@ The current signature and link of the second button are set in the application i
 1. Create an app in the [Discord Developer Portal](https://discord.com/developers/applications ) and take his **Client ID**.
 2. In the Cosmic Rich Presence window, specify:
    - `clientId`
-   - label and URL for Steam buttons
-   - label and URL for the Website-buttons
+   - label and URL for Steam buttons(example)
+   - label and URL for the Website-buttons(example)
 3. Press **SAVE**, after which Presence will automatically restart.
 
 Without the filled in `ClientID` and both sets of values (label + url), the Rich Presence script does not run.
