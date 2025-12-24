@@ -1,12 +1,12 @@
+
+
+# Cosmic Rich Presence
 <h1 align="center">
  <img width="451" height="493" alt="image" src="https://github.com/user-attachments/assets/b62c9136-0212-4f21-a6fd-250e43cdf886" />
 
   <img width="247" height="163" alt="image" src="https://github.com/user-attachments/assets/29ee6257-4200-4dee-95c4-fa3b023fa098" />
 
 </h1>
-
-# Cosmic Rich Presence
-
 Cosmic Rich Presence is a small Electron application that shows the dynamic status of observing space objects in Discord.
 
 ## Features
